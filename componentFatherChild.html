@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <div id="demo">
+        <p>{{name}}</p>
+        <father></father>
+        <button @click="ajax()">发送</button>
+    </div>
+</body>
+<script src="../vue.js"></script>
+<script src="../vue-resource.min.js"></script>
+<script>
+    var child = Vue.extend({
+        template:'<div>child</div>'
+    })
+    Vue.component('father',{
+        template:'<div>{{name}} father<child></child></div>',
+        components:{
+            child
+        },
+        data(){
+            return{
+                name:'cyrus'
+            }
+        }
+    })
+    /*Vue.component('child',{
+        template:'<div>child</div>'
+    })*/
+    var demo = new Vue({
+        el:'#demo',
+        data:{
+            name:"cyrus"
+        },
+        methods:{
+            ajax(){
+                /*this.$http.get('test.php').then((data)=>{
+                    console.log(data)
+                    this.name = data.data
+                })*/
+                this.$http.jsonp('test.php',{
+                    params:{
+                        a:1,
+                        b:2,
+                        callback:'JSON_CALLBACK'
+                    }
+                }).then((data)=>{
+                    console.log(data)
+                    this.name = data.data.a
+                })
+            }
+        }
+    })
+    console.log(demo)
+</script>
+</html>
